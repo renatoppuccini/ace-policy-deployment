@@ -1,0 +1,38 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: vpa-app
+  namespace: all-clusters
+  annotations:
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: vpa-app
+        spec:
+          namespaceSelector:
+            include:
+              - erie-demo
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: autoscaling.k8s.io/v1
+                kind: VerticalPodAutoscaler
+                metadata:
+                  name: vpa-recommender
+                spec:
+                  targetRef:
+                    name: spring-deployment
+                    apiVersion: apps/v1
+                    kind: Deployment
+                  updatePolicy:
+                    updateMode: Auto
+          remediationAction: enforce
+          severity: low
+  remediationAction: enforce
