@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: spring
-          image: quay.io/rpuccini/spring-music
+          image: image-registry.openshift-image-registry.svc:5000/erie-demo/spring-music
           ports:
             - containerPort: 80
               protocol: TCP
